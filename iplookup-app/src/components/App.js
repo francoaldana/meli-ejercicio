@@ -49,7 +49,6 @@ class App extends Component {
 
   handleSubmit = async (event) => {
     event.preventDefault();
-
     const data = new FormData(event.target);
     let ipaddress = data.get('ipaddress');
 
