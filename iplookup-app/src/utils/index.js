@@ -1,7 +1,7 @@
 const isValidIPAddress = (ipaddress) => {
 	const ipaddrJs = require('ipaddr.js');
 
-	if(!ipaddrJs.isValid(ipaddress) || ipaddrJs.parse(ipaddress).range() === "private" || ipaddrJs.parse(ipaddress).range() === "reserved" || (ipaddress.split(".").length - 1) < 3) {
+	if(!ipaddrJs.isValid(ipaddress) || ipaddrJs.parse(ipaddress).range() === "private" || ipaddrJs.parse(ipaddress).range() === "reserved" || (ipaddress.split(".").length - 1) < 3 || ipaddress.split(".")[0] === "127") {
 		return false;
 	}
 
@@ -44,12 +44,12 @@ const getDistanceBetweenCoordinates = (fromCoord, toCoord) => {
 	return dist.toFixed(2);
 }
 
+//Didn't use Moment.js because it fails with tz like UTC+05:40
 const getTimeByTimezone = (timezones) => {
-
 	let result = [];
-	let dict = {};
 
 	timezones.forEach((timezone) => {
+		let dict = {};
 		let utctz = timezone;
 		let time = timezone.substr(3).split(':');
 		let offset = time[0];

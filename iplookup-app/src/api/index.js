@@ -13,7 +13,13 @@ const getIpAddress = async ipAddress => {
 	let url = `https://api.ip2country.info/ip?${ipAddress}`;
 
 	let results = await fetch(url);
-	return results.json();
+	let response = await results.json();
+
+	if (!response || response.status === 400) {
+	  throw new Error('getIpAddress Failed');
+	}
+
+	return response;
 };
 
 /**
@@ -32,6 +38,10 @@ const getCountryInfo = async countryCode3 => {
 
   const results = await fetch(url);
   const response = await results.json();
+
+	if (!response || response.status === 400) {
+	  throw new Error('getCountryInfo Failed');
+	}
 
   const languages = response.languages || [];
   const currencies = response.currencies || [];
@@ -65,20 +75,29 @@ const getCountryInfo = async countryCode3 => {
  */
 
 const getCountryCurrency = async currencies =>{
+	const currCode = currencies[0].code;
+	const currSym = currencies[0].symbol;
+	const query = currCode + "_USD";
+	const url = `https://free.currencyconverterapi.com/api/v6/convert?q=${query}&compact=ultra`;
 
-      const currCode = currencies[0].code;
-      const currSym = currencies[0].symbol;
-      const query = currCode + "_USD";
-      const url = `https://free.currencyconverterapi.com/api/v6/convert?q=${query}&compact=ultra`;
+	const results = await fetch(url);
+	const currencyRateRes = await results.json();
 
-      const results = await fetch(url);
-      const currencyRate = await results.json();
+	if (!currencyRateRes || currencyRateRes.status === 400) {
+	  throw new Error('getCountryCurrency Failed');
+	}
 
-      return{
-        currCode,
-        currSym,
-        currencyRate
-      };
-  }
+	let currencyRate = currencyRateRes[Object.keys(currencyRateRes)[0]];
 
-export default { getIpAddress, getCountryInfo, getCountryCurrency};
+	return{
+	  currCode,
+	  currSym,
+	  currencyRate
+	};
+}
+
+export default {
+	getIpAddress,
+	getCountryInfo,
+	getCountryCurrency
+};

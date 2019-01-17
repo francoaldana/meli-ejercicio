@@ -1,11 +1,11 @@
 ﻿import React, { Component } from 'react';
 import './css/App.css';
 import './css/custom.css';
-import Api from "../api";
-import Utils from "../utils";
+import Api from '../api';
+import Utils from '../utils';
 import Loader from 'react-loader-spinner'
-import { ToastContainer } from "react-toastr";
-import {Map, Marker, GoogleApiWrapper} from 'google-maps-react';
+import { ToastContainer } from 'react-toastr';
+import { Map, Marker, GoogleApiWrapper } from 'google-maps-react';
 
 import {
   Container, Row, Col, Form, Button,
@@ -19,7 +19,7 @@ class App extends Component {
   constructor(props) {
     super(props);
       this.state = {
-        'ipaddress': '',
+        ipaddress: '',
         validate: {
           ipaddressState: '',
         },
@@ -30,22 +30,22 @@ class App extends Component {
         currencyInfoFetched:null,
         searchStatus: null
       }
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.toggleNavbar = this.toggleNavbar.bind(this);
   }
 
-  setIPAddressState(e) {
-    const { validate } = this.state
+  setIPAddressState = (event) => {
+    const {
+      validate
+    } = this.state
 
-    if(!Utils.isValidIPAddress(e.target.value)){
+    if (!Utils.isValidIPAddress(event.target.value)) {
       validate.ipaddressState = 'has-danger'
-    }else{
+    } else {
       validate.ipaddressState = 'has-success'
     }
 
-    this.setState({ validate })
+    this.setState({
+      validate
+    })
   }
 
   handleSubmit = async (event) => {
@@ -54,13 +54,20 @@ class App extends Component {
     const data = new FormData(event.target);
     let ipaddress = data.get('ipaddress');
 
-    if(!Utils.isValidIPAddress(ipaddress)){
+    if (!Utils.isValidIPAddress(ipaddress)) {
       this.setState({
-        searchStatus: "error", ipInfoFetched: null, countryInfoFetched: null, currencyInfoFetched: null
+        searchStatus: "error",
+        ipInfoFetched: null,
+        countryInfoFetched: null,
+        currencyInfoFetched: null
       });
     } else {
       this.setState({
-        searchStatus: "loading", ipInfoFetched: null, countryInfoFetched: null, currencyInfoFetched: null, ipSearched: ipaddress
+        searchStatus: "loading",
+        ipInfoFetched: null,
+        countryInfoFetched: null,
+        currencyInfoFetched: null,
+        ipSearched: ipaddress
       });
 
       let currencyInfoFetched = null;
@@ -68,31 +75,43 @@ class App extends Component {
       let countryInfoFetched = null;
 
       try {
-          ipInfoFetched = await Api.getIpAddress(ipaddress);
-          countryInfoFetched = await Api.getCountryInfo(ipInfoFetched.countryCode3);
-          currencyInfoFetched = await Api.getCountryCurrency(countryInfoFetched.currencies);
-          console.log(currencyInfoFetched.currencyRate);
-          this.setState({
-            ipSearched: ipaddress,
-            ipInfoFetched: ipInfoFetched,
-            countryInfoFetched: countryInfoFetched,
-            currencyInfoFetched: currencyInfoFetched,
-            searchStatus: "success"
-          });
-      } catch (e) {
-          console.log("ERROR - TypeError: " + e);
-          this.refs.container.error(
-            <strong>Hubo un error al obtener la respuesta</strong>,
-            <em>No se pudo completar la búsqueda de la dirección IP proporcionada.</em>
-          );
+        ipInfoFetched = await Api.getIpAddress(ipaddress);
+        countryInfoFetched = await Api.getCountryInfo(ipInfoFetched.countryCode3);
+        currencyInfoFetched = await Api.getCountryCurrency(countryInfoFetched.currencies);
+        //console.log(countryInfoFetched.timezones);
+        //console.log(Utils.getTimeByTimezone(countryInfoFetched.timezones));
 
-          this.setState({
-            ipSearched: null,
-            ipInfoFetched: null,
-            countryInfoFetched: null,
-            currencyInfoFetched: null,
-            searchStatus: "error"
-          });
+        this.setState({
+          ipSearched: ipaddress,
+          ipInfoFetched: ipInfoFetched,
+          countryInfoFetched: countryInfoFetched,
+          currencyInfoFetched: currencyInfoFetched,
+          searchStatus: "success"
+        });
+      } catch (error) {
+        let errorMessage;
+        console.log('ERROR - ErrorType: ' + error.message);
+
+        switch (error.message) {
+          case 'Failed to fetch':
+            errorMessage = 'No se pudo completar la búsqueda de la dirección IP. Una API no funciona correctamente.';
+          break;
+          default:
+            errorMessage = 'No se pudo completar la búsqueda de la dirección IP. Problema interno.';
+        }
+
+        this.refs.container.error(
+          <strong>Hubo un error al obtener la respuesta</strong>,
+          <em>{errorMessage}</em>
+        );
+
+        this.setState({
+          ipSearched: null,
+          ipInfoFetched: null,
+          countryInfoFetched: null,
+          currencyInfoFetched: null,
+          searchStatus: "error"
+        });
       }
 
 
@@ -109,7 +128,7 @@ class App extends Component {
     });
   }
 
-  toggleNavbar() {
+  toggleNavbar = () => {
     this.setState({
       collapsed: !this.state.collapsed
     });
@@ -222,7 +241,7 @@ class App extends Component {
                   <ListGroupItemText>
                   La moneda local es el <b>{this.state.countryInfoFetched.currencies[0].name} ({this.state.countryInfoFetched.currencies[0].code}).</b>
                   <br/>
-                  El cambio es de 1{this.state.countryInfoFetched.currencies[0].code} = USD
+                  El cambio es de <b>1 {this.state.countryInfoFetched.currencies[0].code} = {this.state.currencyInfoFetched.currencyRate} USD</b>
                   </ListGroupItemText>
                 </ListGroupItem>
                 <ListGroupItem>
