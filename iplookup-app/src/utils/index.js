@@ -1,3 +1,10 @@
+/**
+ *
+ *  Given an IP Address returns true or false
+ *	depending on if it's valid or not
+ *
+ */
+
 const isValidIPAddress = (ipaddress) => {
 	const ipaddrJs = require('ipaddr.js');
 
@@ -7,6 +14,13 @@ const isValidIPAddress = (ipaddress) => {
 
 	return true;
 }
+
+/**
+ *
+ *  Given two [lat, long] returns
+ *	distance in KM
+ *
+ */
 
 const getDistanceBetweenCoordinates = (fromCoord, toCoord) => {
 	const lat1 = fromCoord[0];
@@ -44,7 +58,13 @@ const getDistanceBetweenCoordinates = (fromCoord, toCoord) => {
 	return dist.toFixed(2);
 }
 
-//Didn't use Moment.js because it fails with tz like UTC+05:40
+/**
+ *
+ *  Given an array of timezones in the format "UTC+XX:XX"
+ *	returns an Object with the timezones and the actual time on each of those timezones
+ *	Didn't use Moment.js because it fails with tz like UTC+05:40
+ *
+ */
 const getTimeByTimezone = (timezones) => {
 	let result = [];
 
@@ -80,4 +100,8 @@ const getTimeByTimezone = (timezones) => {
 	return result;
 }
 
-export default { isValidIPAddress, getDistanceBetweenCoordinates, getTimeByTimezone };
+export default {
+	isValidIPAddress,
+	getDistanceBetweenCoordinates,
+	getTimeByTimezone
+};

@@ -1,6 +1,5 @@
 ﻿import React, { Component } from 'react';
 import './css/App.css';
-import './css/custom.css';
 import Api from '../api';
 import Utils from '../utils';
 import Loader from 'react-loader-spinner'
@@ -78,8 +77,6 @@ class App extends Component {
         ipInfoFetched = await Api.getIpAddress(ipaddress);
         countryInfoFetched = await Api.getCountryInfo(ipInfoFetched.countryCode3);
         currencyInfoFetched = await Api.getCountryCurrency(countryInfoFetched.currencies);
-        //console.log(countryInfoFetched.timezones);
-        //console.log(Utils.getTimeByTimezone(countryInfoFetched.timezones));
 
         this.setState({
           ipSearched: ipaddress,

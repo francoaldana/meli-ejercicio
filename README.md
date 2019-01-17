@@ -33,7 +33,6 @@ contenedor Docker (incluir un Dockerfile e instrucciones para ejecutarlo).
 ## Notas de implementación
 Para la resolución del ejercicio se desarrolló una WebApp con ReactJS. La aplicación se permite buscar y obtener los datos de cualquier dirección IPv4 pública.
 Fue necesario usar 3 APIs distintas para la obtención de toda la información pedida ya que no se encontró una completa que cumpla con todos los requerimientos:
-
 ### `https://api.ip2country.info/ip?`
 Para obtener el país de origen de la IP
 ### `https://restcountries.eu/rest/v2/alpha/`
@@ -42,3 +41,12 @@ Para obtener información avanzada del país de origen
 Para obtener información avanzada acerca del cambio de la moneda del país de origen
 
 ## Deploy
+
+Clonar el repositorio en un directorio de preferencia. Luego, para la creación del container con Docker en el directorio `/iplookup-app` ejecutar:
+### docker build . -t iplookup-meli
+
+Al finalizar, ejecutar:
+### docker run -p 8080:80 iplookup-meli
+
+La aplicación web será accesible en:
+### http://localhost:8080/
