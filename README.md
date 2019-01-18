@@ -1,3 +1,4 @@
+
 # meli-ejercicio
 Ejercicio para ingreso - Advanced IPLookup
 
@@ -33,12 +34,13 @@ contenedor Docker (incluir un Dockerfile e instrucciones para ejecutarlo).
 ## Notas de implementación
 Para la resolución del ejercicio se desarrolló una WebApp con ReactJS. La aplicación permite buscar y obtener los datos de cualquier dirección IPv4 pública.
 Fue necesario usar 3 APIs distintas para la obtención de toda la información pedida ya que no se encontró una completa que cumpla con todos los requerimientos:
-### `https://api.ip2country.info`
-Para obtener el país de origen de la IP
-### `https://restcountries.eu`
-Para obtener información avanzada del país de origen
-### `https://free.currencyconverterapi.com`
-Para obtener información avanzada acerca del cambio de la moneda del país de origen. Esta API es una de las únicas FREE que proporciona lo necesario en cuanto a currency rates.
+ 1. Para obtener el país de origen de la IP: `https://api.ip2country.info`
+ 2. Para obtener información avanzada del país de origen: `https://restcountries.eu`
+ 3. Para obtener información avanzada acerca del cambio de la moneda del país de origen: `https://free.currencyconverterapi.com`. Esta API es una de las únicas FREE que proporciona lo necesario en cuanto a currency rates.
+
+Existen **varios enfoques** para encarar el ejercicio dado. Como las APIs utilizadas no necesitaban una private key y no se necesitaba (por requerimientos) guardar el registro de búsquedas realizadas ni nada similar, **se decidió realizar las llamadas a las APIs desde el frontend para no agregar una capa más de complejidad**. Además, las respuestas generadas por las API necesitan poco procesamiento para finalmente ser mostradas en la UI, por lo que tampoco ameritaba agregar un servidor backend a la estructura del proyecto.
+
+De todas formas, **se podría realizar el ejercicio como se menciona y crear un endpoint local** que enviándole como parámetro la IP deseada realice el mismo procesamiento que actualmente realiza el frontend y devuelva un objeto con toda la información requerida. Como ventaja de este enfoque se abstrae al cliente de las APIs utilizadas para obtener la información y se puede agregar una capa más para filtrar la búsqueda y asegurar un correcto resultado, **pero como se mencionó previamente dada la naturaleza de los requerimientos se consideró innecesario realizarlo** y aumentar la complejidad de la aplicación de esa manera.
 
 ## Instrucciones de deploy
 Clonar el repositorio en un directorio de preferencia. Luego, para la construcción del container con Docker en el directorio `/iplookup-app` ejecutar:
